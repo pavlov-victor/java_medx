@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">MedX</string>
+    <string name="diary_title">Дневник артериального давления</string>
+    <string name="add_entry">Добавить запись</string>
+    <string name="upperPressure">Введите верхнее давление</string>
+    <string name="lowerPressureInput">Введите нижнее давление</string>
+    <string name="pulseInput">Введите пульс</string>
+    <string name="noteInput">Введите заметку</string>
+    <string name="pulseMeterButton">Замерить пульс</string>
+    <string name="pulse_meter_start_button">Начать замерять пульс</string>
+    <string name="pulse_meter_instruction">На шее (на сонной артерии). Поместите указательный и безымянный пальцы руки на шее, рядом с трахеей. Посчитайте количество ударов в минуту.</string>
+    <string name="pulse_meter_title_text">Замер пульса</string>
+    <string name="pulse_meter_instruction_image">Изображение инструкции</string>
+    <string name="pulseMeterCounter">Пульс: 0</string>
+    <string name="pulseMeterSeconds">Время: 60</string>
+    <string name="pulse">Удар</string>
+    <string name="deleteButton">Удалить</string>
+    <string name="date">Дата</string>
+    <string name="number">Номер</string>
+    <string name="upper_and_lower_pressure">Верхнее и нижнее давление</string>
+    <string name="pulse_name">Пульс</string>
+    <string name="note">Заметка</string>
+</resources>
