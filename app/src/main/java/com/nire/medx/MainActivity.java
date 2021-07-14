@@ -67,22 +67,17 @@ public class MainActivity extends AppCompatActivity {
                     convertView = getLayoutInflater()
                             .inflate(R.layout.entry, null, false);
                 }
-                TextView entryUpperPressure =
-                        (TextView) convertView.findViewById(R.id.upperPressure);
-                TextView entryLowerPressure =
-                        (TextView) convertView.findViewById(R.id.lowerPressure);
-                TextView entryPulse =
-                        (TextView) convertView.findViewById(R.id.pulse);
-                TextView entryNote =
-                        (TextView) convertView.findViewById(R.id.note);
-                TextView entryDatetime =
-                        (TextView) convertView.findViewById(R.id.datetime);
+                TextView entryUpperPressure = convertView.findViewById(R.id.upperPressure);
+                TextView entryLowerPressure = convertView.findViewById(R.id.lowerPressure);
+                TextView entryPulse = convertView.findViewById(R.id.pulse);
+                TextView entryNote = convertView.findViewById(R.id.note);
+                TextView entryDatetime = convertView.findViewById(R.id.datetime);
 
-                entryUpperPressure.setText(String.format(getResources().getConfiguration().locale,"%d", entry.getUpperPressure()));
-                entryLowerPressure.setText("" + entry.getLowerPressure());
-                entryPulse.setText("" + entry.getPulse());
-                entryNote.setText("" + entry.getNote());
-                entryDatetime.setText("" + entry.getDatetime());
+                entryUpperPressure.setText(String.format(getResources().getConfiguration().locale, "%d", entry.getUpperPressure()));
+                entryLowerPressure.setText(String.format("%s", entry.getLowerPressure()));
+                entryPulse.setText(String.format("%s", entry.getPulse()));
+                entryNote.setText(String.format("%s", entry.getNote()));
+                entryDatetime.setText(String.format("%s", entry.getDatetime()));
                 return convertView;
             }
         };
@@ -104,12 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 realmAdapter.addAll(realmEntries);
                 realmAdapter.notifyDataSetChanged();
             });
-            builder.setNegativeButton("отменить", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Toast.makeText(getApplicationContext(), "Вы отменили действие", Toast.LENGTH_SHORT).show();
-                }
-            });
+            builder.setNegativeButton("отменить", (dialogInterface, i12) -> Toast.makeText(getApplicationContext(), "Вы отменили действие", Toast.LENGTH_SHORT).show());
             AlertDialog dialog = builder.create();
             dialog.show();
             return false;
