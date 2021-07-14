@@ -33,13 +33,11 @@ public class CreateEntryActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -85,9 +83,7 @@ public class CreateEntryActivity extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                final ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
-                layoutParams.height = layout.getHeight();
-                layout.setLayoutParams(layoutParams);
+                layout.setMinHeight(layout.getHeight());
             }
         });
 

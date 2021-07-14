@@ -44,7 +44,7 @@ public class PulseMeterActivity extends AppCompatActivity {
         processPulseLayout.setVisibility(View.VISIBLE);
         isProcess = true;
         pulse = 0;
-        seconds = 5;
+        seconds = 60;
         new SecondsThread().start();
     }
 
