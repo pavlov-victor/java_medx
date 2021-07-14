@@ -73,7 +73,7 @@
             android:ems="10"
             android:inputType="number"
             app:layout_constraintBottom_toTopOf="@+id/textView6"
-            app:layout_constraintEnd_toStartOf="@+id/pulseMeterButton"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
@@ -83,10 +83,10 @@
             android:layout_height="wrap_content"
             android:onClick="onClickOpenPulseMeter"
             android:text="@string/pulseMeterButton"
-            app:layout_constraintBottom_toBottomOf="@+id/pulse"
+            app:layout_constraintBottom_toTopOf="@+id/textView6"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/pulse"
-            app:layout_constraintTop_toTopOf="@+id/pulse" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pulse" />
 
         <TextView
             android:id="@+id/textView6"

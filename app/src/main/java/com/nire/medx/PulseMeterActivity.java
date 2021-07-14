@@ -5,6 +5,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class PulseMeterActivity extends AppCompatActivity {
 
     TextView pulseMeterCounter;
     TextView pulseMeterSeconds;
+    Handler handler;
 
 
     @Override
@@ -32,6 +34,7 @@ public class PulseMeterActivity extends AppCompatActivity {
         this.processPulseLayout = findViewById(R.id.processPulseLayout);
         this.pulseMeterCounter = findViewById(R.id.pulseMeterCounter);
         this.pulseMeterSeconds = findViewById(R.id.pulseMeterSeconds);
+        this.handler = new Handler();
 
 //        Intent intent =getIntent();
 //        this.upperPressure = intent.getStringExtra("upperPressure");
@@ -59,7 +62,13 @@ public class PulseMeterActivity extends AppCompatActivity {
         @Override
         public void run() {
             for (int i = seconds; i > 0; i--) {
-                pulseMeterSeconds.setText(String.format("Время: %s", i));
+                int finalI = i;
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        pulseMeterSeconds.setText(String.format("Время: %s", finalI));
+                    }
+                });
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

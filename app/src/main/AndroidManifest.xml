@@ -9,9 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedX">
-        <activity android:name=".PulseMeterActivity" />
+        <activity
+            android:name=".PulseMeterActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CreateEntryActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MainActivity">
             <intent-filter>
