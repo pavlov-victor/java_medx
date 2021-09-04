@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedX">
         <activity
+            android:name=".EditEntryActivity"
+            android:exported="true" />
+        <activity
             android:name=".PulseMeterActivity"
             android:screenOrientation="portrait" />
         <activity

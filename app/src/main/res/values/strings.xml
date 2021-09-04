@@ -20,4 +20,5 @@
     <string name="upper_and_lower_pressure">Верхнее и нижнее давление</string>
     <string name="pulse_name">Пульс</string>
     <string name="note">Заметка</string>
+    <string name="change">Изменить</string>
 </resources>

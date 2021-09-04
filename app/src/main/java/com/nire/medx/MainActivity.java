@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +30,7 @@ import io.realm.Sort;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button addEntryButton;
+    FloatingActionButton addEntryButton;
     ListView diaryListView;
     List<DiaryRealmObject> realmEntries = Collections.emptyList();
     ArrayAdapter<DiaryRealmObject> realmAdapter;
@@ -99,7 +101,12 @@ public class MainActivity extends AppCompatActivity {
                 realmAdapter.addAll(realmEntries);
                 realmAdapter.notifyDataSetChanged();
             });
-            builder.setNegativeButton("отменить", (dialogInterface, i12) -> Toast.makeText(getApplicationContext(), "Вы отменили действие", Toast.LENGTH_SHORT).show());
+            builder.setNegativeButton("Редактировать", (dialogInterface, i12) -> {
+                Toast.makeText(getApplicationContext(), "Вы открыли редактирование", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, EditEntryActivity.class);
+                intent.putExtra("entryDatetime", entry.getDatetime());
+                startActivity(intent);
+            });
             AlertDialog dialog = builder.create();
             dialog.show();
             return false;

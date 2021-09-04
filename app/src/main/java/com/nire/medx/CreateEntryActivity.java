@@ -87,7 +87,6 @@ public class CreateEntryActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     public void onClickSaveEntry(View view) {
@@ -105,15 +104,13 @@ public class CreateEntryActivity extends AppCompatActivity {
             diaryRealmObject.setPulse(Integer.parseInt(pulse.getText().toString()));
             realm.commitTransaction();
             Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
     }
 
     public void onClickOpenPulseMeter(View view) {
         Intent intent = new Intent(this, PulseMeterActivity.class);
-//        intent.putExtra("upperPressure", upperPressure.getText().toString());
-//        intent.putExtra("lowerPressure", lowerPressure.getText().toString());
-//        intent.putExtra("note", note.getText().toString());
         intentActivityResultLauncher.launch(intent);
     }
 }

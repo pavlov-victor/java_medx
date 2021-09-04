@@ -14,9 +14,6 @@ public class PulseMeterActivity extends AppCompatActivity {
     private int pulse;
     int seconds;
     private boolean isProcess = false;
-//    String upperPressure;
-//    String lowerPressure;
-//    String note;
 
     ConstraintLayout startPulseLayout;
     ConstraintLayout processPulseLayout;
@@ -35,11 +32,6 @@ public class PulseMeterActivity extends AppCompatActivity {
         this.pulseMeterCounter = findViewById(R.id.pulseMeterCounter);
         this.pulseMeterSeconds = findViewById(R.id.pulseMeterSeconds);
         this.handler = new Handler();
-
-//        Intent intent =getIntent();
-//        this.upperPressure = intent.getStringExtra("upperPressure");
-//        this.lowerPressure = intent.getStringExtra("lowerPressure");
-//        this.note = intent.getStringExtra("note");
     }
 
     public void onClickStartPulseMeter(View view) {
@@ -76,11 +68,6 @@ public class PulseMeterActivity extends AppCompatActivity {
                 }
             }
             isProcess = false;
-//            Intent intent = new Intent(getApplicationContext(), CreateEntryActivity.class);
-//            intent.putExtra("pulse", pulse);
-//            intent.putExtra("upperPressure", upperPressure);
-//            intent.putExtra("lowerPressure", lowerPressure);
-//            intent.putExtra("note", note);
             setResult(RESULT_OK, new Intent().putExtra("pulse", pulse));
             finish();
         }
