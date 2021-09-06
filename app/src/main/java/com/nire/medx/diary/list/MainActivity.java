@@ -1,46 +1,51 @@
-package com.nire.medx;
+package com.nire.medx.diary.list;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.nire.medx.diary.edit.CreateEntryActivity;
+import com.nire.medx.diary.edit.EditEntryActivity;
+import com.nire.medx.R;
+import com.nire.medx.diary.DiaryRealmObject;
+import com.nire.medx.utils.RealmBaseAdapter;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
-import io.realm.Sort;
+import io.realm.OrderedRealmCollection;
 
 public class MainActivity extends AppCompatActivity {
 
     FloatingActionButton addEntryButton;
     ListView diaryListView;
-    List<DiaryRealmObject> realmEntries = Collections.emptyList();
-    ArrayAdapter<DiaryRealmObject> realmAdapter;
-    Realm realm;
+    OrderedRealmCollection<DiaryRealmObject> realmEntries;
+    DiaryListPresenter presenter;
 
+    @Nullable
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return presenter;
+    }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
-        realm.close();
+        if (!isChangingConfigurations()) {
+            presenter.close();
+            presenter = null;
+        }
     }
 
     @Override
@@ -50,37 +55,32 @@ public class MainActivity extends AppCompatActivity {
         this.addEntryButton = findViewById(R.id.addEntryButton);
         this.diaryListView = findViewById(R.id.diaryListView);
 
-        Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
-                .allowQueriesOnUiThread(true)
-                .allowWritesOnUiThread(true)
-                .build();
-        this.realm = Realm.getInstance(config);
+        presenter = (DiaryListPresenter) getLastCustomNonConfigurationInstance();
+        if (presenter == null) {
+            presenter = new DiaryListPresenter();
+        }
 
-        realmEntries = realm.where(DiaryRealmObject.class).sort("datetime", Sort.DESCENDING).findAll();
+        realmEntries = presenter.getDiaries();
 
-        this.realmAdapter = new ArrayAdapter<DiaryRealmObject>(this, R.layout.entry, new ArrayList<>(realmEntries)) {
+        RealmBaseAdapter<DiaryRealmObject> realmAdapter = new RealmBaseAdapter<DiaryRealmObject>(realmEntries) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 DiaryRealmObject entry = getItem(position);
+                DiaryHolder holder;
                 if (convertView == null) {
-                    convertView = getLayoutInflater()
-                            .inflate(R.layout.entry, null, false);
+                    holder = new DiaryHolder(parent);
+                    holder.root.setTag(holder);
+                } else {
+                    holder = (DiaryHolder) convertView.getTag();
                 }
-                TextView entryUpperPressure = convertView.findViewById(R.id.upperPressure);
-                TextView entryLowerPressure = convertView.findViewById(R.id.lowerPressure);
-                TextView entryPulse = convertView.findViewById(R.id.pulse);
-                TextView entryNote = convertView.findViewById(R.id.note);
-                TextView entryDatetime = convertView.findViewById(R.id.datetime);
-
-                entryUpperPressure.setText(String.format(getResources().getConfiguration().locale, "%d", entry.getUpperPressure()));
-                entryLowerPressure.setText(String.format("%s", entry.getLowerPressure()));
-                entryPulse.setText(String.format("%s", entry.getPulse()));
-                entryNote.setText(String.format("%s", entry.getNote()));
-                entryDatetime.setText(String.format("%s", entry.getDatetime()));
-                return convertView;
+                assert entry != null;
+                holder.entryUpperPressure.setText(String.format(getResources().getConfiguration().locale, "%d", entry.getUpperPressure()));
+                holder.entryLowerPressure.setText(String.format("%s", entry.getLowerPressure()));
+                holder.entryPulse.setText(String.format("%s", entry.getPulse()));
+                holder.entryNote.setText(entry.getNote());
+                holder.entryDatetime.setText(entry.getDatetime().toString());
+                return holder.root;
             }
         };
 
@@ -91,14 +91,8 @@ public class MainActivity extends AppCompatActivity {
             builder.setTitle("Удаление записи");
             builder.setMessage("Вы хотите удалить запись от " + entry.getDatetime().toString() + "?");
             builder.setPositiveButton("Удалить", (dialogInterface, i1) -> {
-                realm.beginTransaction();
-                RealmResults<DiaryRealmObject> result = realm.where(DiaryRealmObject.class).equalTo("datetime", entry.getDatetime()).findAll();
-                result.deleteAllFromRealm();
-                realm.commitTransaction();
+                presenter.deleteDiary(entry);
                 Toast.makeText(getApplicationContext(), "Удалено", Toast.LENGTH_SHORT).show();
-                realmEntries = realm.where(DiaryRealmObject.class).sort("datetime", Sort.DESCENDING).findAll();
-                realmAdapter.clear();
-                realmAdapter.addAll(realmEntries);
                 realmAdapter.notifyDataSetChanged();
             });
             builder.setNegativeButton("Редактировать", (dialogInterface, i12) -> {

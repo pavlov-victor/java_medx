@@ -1,4 +1,4 @@
-package com.nire.medx;
+package com.nire.medx.diary.edit;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -10,13 +10,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.Calendar;
-import java.util.Date;
+import com.nire.medx.R;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -27,9 +25,9 @@ public class CreateEntryActivity extends AppCompatActivity {
     EditText upperPressure;
     EditText lowerPressure;
     EditText pulse;
-    Realm realm;
-
     ActivityResultLauncher<Intent> intentActivityResultLauncher;
+
+    EditPresenter presenter;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -44,7 +42,7 @@ public class CreateEntryActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        realm.close();
+        presenter.close();
     }
 
     @Override
@@ -57,6 +55,7 @@ public class CreateEntryActivity extends AppCompatActivity {
         });
 
         super.onCreate(savedInstanceState);
+        presenter = new EditPresenter();
         setContentView(R.layout.activity_create_entry);
         this.note = findViewById(R.id.note);
         this.upperPressure = findViewById(R.id.upperPressure);
@@ -71,13 +70,6 @@ public class CreateEntryActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        Realm.init(getApplicationContext());
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
-                .allowQueriesOnUiThread(true)
-                .allowWritesOnUiThread(true)
-                .build();
-        this.realm = Realm.getInstance(config);
         ConstraintLayout layout = findViewById(R.id.create_activity_constraint);
         layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -86,7 +78,6 @@ public class CreateEntryActivity extends AppCompatActivity {
                 layout.setMinHeight(layout.getHeight());
             }
         });
-
     }
 
     public void onClickSaveEntry(View view) {
@@ -94,18 +85,14 @@ public class CreateEntryActivity extends AppCompatActivity {
             Toast.makeText(this, "Все поля кроме заметки обязательны", Toast.LENGTH_SHORT).show();
         } else {
 
-            realm.beginTransaction();
-            DiaryRealmObject diaryRealmObject = realm.createObject(DiaryRealmObject.class);
-            Date date = Calendar.getInstance().getTime();
-            diaryRealmObject.setDatetime(date);
-            diaryRealmObject.setUpperPressure(Integer.parseInt(upperPressure.getText().toString()));
-            diaryRealmObject.setLowerPressure(Integer.parseInt(lowerPressure.getText().toString()));
-            diaryRealmObject.setNote(note.getText().toString());
-            diaryRealmObject.setPulse(Integer.parseInt(pulse.getText().toString()));
-            realm.commitTransaction();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            presenter.saveEntry(
+                    null,
+                    Integer.parseInt(upperPressure.getText().toString()),
+                    Integer.parseInt(lowerPressure.getText().toString()),
+                    note.getText().toString(),
+                    Integer.parseInt(pulse.getText().toString())
+            );
+            finish();
         }
     }
 

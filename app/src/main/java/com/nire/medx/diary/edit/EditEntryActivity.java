@@ -1,4 +1,4 @@
-package com.nire.medx;
+package com.nire.medx.diary.edit;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,10 +8,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.Date;
+import com.nire.medx.R;
+import com.nire.medx.diary.list.MainActivity;
+import com.nire.medx.diary.DiaryRealmObject;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import java.util.Date;
 
 public class EditEntryActivity extends AppCompatActivity {
 
@@ -21,25 +22,25 @@ public class EditEntryActivity extends AppCompatActivity {
     EditText pulse;
     Button button;
 
-    Realm realm;
+    EditPresenter presenter;
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        realm.close();
+        presenter.close();
+    }
+
+    @Override
+    public boolean onNavigateUp() {
+        finish();
+        return true;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
-                .allowQueriesOnUiThread(true)
-                .allowWritesOnUiThread(true)
-                .build();
-        this.realm = Realm.getInstance(config);
+        presenter = new EditPresenter();
 
         setContentView(R.layout.activity_edit_entry);
         Intent intent = getIntent();
@@ -49,9 +50,7 @@ public class EditEntryActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         Date entryDatetime = (Date) intent.getSerializableExtra("entryDatetime");
-        realm.beginTransaction();
-        DiaryRealmObject result = realm.where(DiaryRealmObject.class).equalTo("datetime", entryDatetime).findFirst();
-        realm.cancelTransaction();
+        DiaryRealmObject result = presenter.retrieveEntry(entryDatetime);
         assert result != null;
 
         upperPressure = findViewById(R.id.upperPressure);
@@ -67,13 +66,13 @@ public class EditEntryActivity extends AppCompatActivity {
         note.setText((result.getNote()));
 
         button.setOnClickListener(view -> {
-            realm.beginTransaction();
-            DiaryRealmObject editingEntry = realm.where(DiaryRealmObject.class).equalTo("datetime", entryDatetime).findFirst();
-            editingEntry.setUpperPressure(Integer.parseInt(upperPressure.getText().toString()));
-            editingEntry.setLowerPressure(Integer.parseInt(lowerPressure.getText().toString()));
-            editingEntry.setNote(note.getText().toString());
-            editingEntry.setPulse(Integer.parseInt(pulse.getText().toString()));
-            realm.commitTransaction();
+            presenter.saveEntry(
+                    entryDatetime,
+                    Integer.parseInt(upperPressure.getText().toString()),
+                    Integer.parseInt(lowerPressure.getText().toString()),
+                    note.getText().toString(),
+                    Integer.parseInt(pulse.getText().toString())
+                    );
             Intent mainIntent = new Intent(this, MainActivity.class);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(mainIntent);

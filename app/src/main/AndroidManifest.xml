@@ -3,6 +3,7 @@
     package="com.nire.medx">
 
     <application
+        android:name=".Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,16 +11,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedX">
         <activity
-            android:name=".EditEntryActivity"
+            android:name=".diary.edit.EditEntryActivity"
+            android:parentActivityName=".diary.list.MainActivity"
             android:exported="true" />
         <activity
-            android:name=".PulseMeterActivity"
+            android:name=".diary.edit.PulseMeterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CreateEntryActivity"
+            android:name=".diary.edit.CreateEntryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".diary.list.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

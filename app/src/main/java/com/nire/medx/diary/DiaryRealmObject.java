@@ -1,13 +1,10 @@
-package com.nire.medx;
+package com.nire.medx.diary;
 
 import java.util.Date;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
 
 public class DiaryRealmObject extends RealmObject {
-
     private int lowerPressure;
 
     private int upperPressure;

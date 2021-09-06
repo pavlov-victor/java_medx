@@ -1,4 +1,4 @@
-package com.nire.medx;
+package com.nire.medx.diary.edit;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
+
+import com.nire.medx.R;
 
 public class PulseMeterActivity extends AppCompatActivity {
 
